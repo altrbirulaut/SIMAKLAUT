@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMAKLAUT - Sistem Informasi Maritim dan Klimatologi Laut Banten</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+            </div>
+            <nav>
+                <button class="nav-btn" data-section="dashboard">Dashboard</button>
+                <button class="nav-btn" data-section="peta">Peta Interaktif</button>
+                <button class="nav-btn" data-section="iklim">Perubahan Iklim</button>
+                <button class="nav-btn" data-section="forum">Forum Diskusi</button>
+                <button class="nav-btn" id="loginBtn" onclick="openLoginModal()">Login</button>
+                <button class="nav-btn" id="userBtn" style="display: none;">
+                    <span id="userName"></span> | <span onclick="logout()" style="cursor: pointer;">Logout</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="dashboard" class="section active">
+            <div class="location-selector">
+                <label for="locationSelect">📍 Pilih Lokasi Pantai:</label>
+                <select id="locationSelect">
+                    <option value="anyer">Pantai Anyer</option>
+                    <option value="carita">Pantai Carita</option>
+                    <option value="sawarna">Pantai Sawarna</option>
+                    <option value="tanjunglesung">Tanjung Lesung</option>
+                    <option value="labuan">Pantai Labuan</option>
+                    <option value="bagedur">Pantai Bagedur</option>
+                </select>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="card-icon">🌊</span> Pasang Surut</h3>
+                    <div class="data-item">
+                        <span class="data-label">Status Saat Ini</span>
+                        <span class="data-value" id="tideStatus">Pasang</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Ketinggian Air</span>
+                        <span class="data-value" id="tideHeight">1.8 m</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Pasang Tinggi Berikutnya</span>
+                        <span class="data-value" id="nextHighTide">14:30</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Surut Rendah Berikutnya</span>
+                        <span class="data-value" id="nextLowTide">20:15</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">🌤️</span> Cuaca Saat Ini</h3>
+                    <div class="data-item">
+                        <span class="data-label">Kondisi</span>
+                        <span class="data-value" id="weatherCondition">Cerah Berawan</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Suhu Udara</span>
+                        <span class="data-value" id="temperature">28°C</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Kelembaban</span>
+                        <span class="data-value" id="humidity">75%</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Kecepatan Angin</span>
+                        <span class="data-value" id="windSpeed">12 km/h</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Arah Angin</span>
+                        <span class="data-value" id="windDirection">Barat Laut</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="card-icon">🌡️</span> Parameter Oseanografi</h3>
+                    <div class="data-item">
+                        <span class="data-label">Suhu Permukaan Laut</span>
+                        <span class="data-value" id="seaTemp">29.2°C</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Salinitas</span>
+                        <span class="data-value" id="salinity">33.5 PSU</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Tinggi Gelombang</span>
+                        <span class="data-value" id="waveHeight">0.8 m</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Periode Gelombang</span>
+                        <span class="data-value" id="wavePeriod">5.2 detik</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Arus Permukaan</span>
+                        <span class="data-value" id="current">0.5 m/s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="peta" class="section">
+            <h2 style="color: #64b5f6; margin-bottom: 1.5rem; font-size: 1.8rem;">🗺️ Peta Interaktif Pantai Banten</h2>
+            <div id="map"></div>
+            
+            <div class="card">
+                <h3>📍 Informasi Lokasi</h3>
+                <p style="color: #e0e7ff; line-height: 1.6; margin-top: 1rem;">
+                    Deskripsi. Gatau ya Allah ya Allah, ga ngerti ini gue ngapain lagi... Udahan pls.
+                </p>
+            </div>
+        </div>
+
+        <div id="iklim" class="section">
+            <h2 style="color: #64b5f6; margin-bottom: 1.5rem; font-size: 1.8rem;">🌍 Monitoring Perubahan Iklim</h2>
+            
+            <div class="card">
+                <h3>📈 Tren Jangka Panjang</h3>
+                <div class="climate-grid">
+                    <div class="climate-item">
+                        <h4>Suhu Permukaan Laut</h4>
+                        <div class="climate-value">+0.8°C</div>
+                        <div class="climate-trend">↑ Dalam 10 tahun terakhir</div>
+                    </div>
+                    <div class="climate-item">
+                        <h4>Kenaikan Permukaan Laut</h4>
+                        <div class="climate-value">+3.2 mm/tahun</div>
+                        <div class="climate-trend">↑ Rata-rata tahunan</div>
+                    </div>
+                    <div class="climate-item">
+                        <h4>Curah Hujan</h4>
+                        <div class="climate-value">-5%</div>
+                        <div class="climate-trend">↓ Penurunan musiman</div>
+                    </div>
+                    <div class="climate-item">
+                        <h4>Frekuensi Gelombang Tinggi</h4>
+                        <div class="climate-value">+15%</div>
+                        <div class="climate-trend">↑ Meningkat signifikan</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid" style="margin-top: 2rem;">
+                <div class="card">
+                    <h3>🌊 Dampak pada Ekosistem</h3>
+                    <p style="color: #e0e7ff; line-height: 1.6; margin-top: 1rem;">
+                        <strong style="color: #64b5f6;">Terumbu Karang:</strong> Peningkatan suhu laut menyebabkan pemutihan karang di beberapa lokasi.<br><br>
+                        <strong style="color: #64b5f6;">Abrasi Pantai:</strong> Kenaikan permukaan laut mempercepat erosi di wilayah pesisir utara Banten.<br><br>
+                        <strong style="color: #64b5f6;">Migrasi Ikan:</strong> Perubahan suhu air mempengaruhi pola migrasi spesies laut komersial.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>⚠️ Peringatan Iklim</h3>
+                    <p style="color: #e0e7ff; line-height: 1.6; margin-top: 1rem;">
+                        <span class="status-badge status-warning">Perhatian</span>
+                        <strong style="display: block; margin-top: 1rem; color: #64b5f6;">Prediksi La Niña:</strong>
+                        Berpotensi meningkatkan curah hujan dan gelombang tinggi di perairan Banten dalam 3-6 bulan ke depan.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Data Historis</h3>
+                    <p style="color: #e0e7ff; line-height: 1.6; margin-top: 1rem;">
+                        Data perubahan iklim dikumpulkan dari stasiun pemantauan BMKG sejak tahun 2000. Analisis tren menggunakan metodologi IPCC dan disesuaikan dengan kondisi lokal Banten.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="forum" class="section">
+            <div class="forum-container">
+                <div class="forum-header">
+                    <h2>💬 Forum Diskusi Akademisi & Peneliti (DEMO)</h2>
+                    <button class="btn-primary" onclick="openNewThreadModal()">+ Buat Diskusi Baru</button>
+                </div>
+
+                <div id="discussionList">
+                    <div class="discussion-thread">
+                        <div class="thread-header">
+                            <div>
+                                <div class="thread-title">Metode Sampling Kualitas Air Laut di Perairan Dangkal</div>
+                                <div class="thread-meta">oleh Dr. Ahmad Santoso • 2 hari yang lalu</div>
+                            </div>
+                            <span class="status-badge status-normal">Aktif</span>
+                        </div>
+                        <div class="thread-content">
+                            Saya sedang melakukan penelitian mengenai parameter kualitas air di zona litoral Pantai Anyer. Ingin berdiskusi mengenai metode sampling yang paling efektif untuk perairan dangkal dengan substrat berpasir. Apakah ada yang memiliki pengalaman dengan...
+                        </div>
+                        <div class="thread-footer">
+                            <span>👁️ 124 dilihat</span>
+                            <span>💬 15 balasan</span>
+                            <span>🏷️ Oseanografi, Metodologi</span>
+                        </div>
+                    </div>
+
+                    <div class="discussion-thread">
+                        <div class="thread-header">
+                            <div>
+                                <div class="thread-title">Dampak Perubahan Iklim terhadap Produktivitas Perikanan Banten</div>
+                                <div class="thread-meta">oleh Prof. Siti Nurhaliza, M.Si • 5 hari yang lalu</div>
+                            </div>
+                            <span class="status-badge status-normal">Aktif</span>
+                        </div>
+                        <div class="thread-content">
+                            Berdasarkan data BMKG 5 tahun terakhir, terjadi peningkatan SST (Sea Surface Temperature) yang signifikan. Bagaimana korelasi ini dengan hasil tangkapan nelayan lokal? Saya mengundang kolaborasi untuk penelitian longitudinal...
+                        </div>
+                        <div class="thread-footer">
+                            <span>👁️ 287 dilihat</span>
+                            <span>💬 32 balasan</span>
+                            <span>🏷️ Klimatologi, Perikanan</span>
+                        </div>
+                    </div>
+
+                    <div class="discussion-thread">
+                        <div class="thread-header">
+                            <div>
+                                <div class="thread-title">Validasi Data Pasang Surut dari Model Numerik vs Observasi Lapangan</div>
+                                <div class="thread-meta">oleh Ir. Budi Prasetyo • 1 minggu yang lalu</div>
+                            </div>
+                            <span class="status-badge status-normal">Aktif</span>
+                        </div>
+                        <div class="thread-content">
+                            Diskusi teknis mengenai akurasi prediksi pasang surut menggunakan model harmonik dibandingkan dengan pengukuran tide gauge di Tanjung Lesung. Ada deviasi sekitar 8-12 cm yang menarik untuk dianalisis lebih lanjut...
+                        </div>
+                        <div class="thread-footer">
+                            <span>👁️ 156 dilihat</span>
+                            <span>💬 21 balasan</span>
+                            <span>🏷️ Hidrodinamika, Model</span>
+                        </div>
+                    </div>
+
+                    <div class="discussion-thread">
+                        <div class="thread-header">
+                            <div>
+                                <div class="thread-title">Dataset Batimetri Resolusi Tinggi untuk Pantai Sawarna</div>
+                                <div class="thread-meta">oleh M.Sc. Rina Kartika • 2 minggu yang lalu</div>
+                            </div>
+                            <span class="status-badge status-warning">Butuh Bantuan</span>
+                        </div>
+                        <div class="thread-content">
+                            Mencari dataset batimetri dengan resolusi minimal 10m untuk keperluan pemodelan tsunami di Sawarna. Apakah ada yang memiliki akses atau rekomendasi sumber data dari BIG atau institusi lain?
+                        </div>
+                        <div class="thread-footer">
+                            <span>👁️ 93 dilihat</span>
+                            <span>💬 8 balasan</span>
+                            <span>🏷️ Data, Batimetri, GIS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="newThreadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Buat Diskusi Baru</h3>
+                <button class="close-modal" onclick="closeNewThreadModal()">×</button>
+            </div>
+            <form id="newThreadForm">
+                <div class="form-group">
+                    <label>Judul Diskusi *</label>
+                    <input type="text" id="threadTitle" placeholder="Masukkan judul diskusi yang jelas dan deskriptif" required>
+                </div>
+                <div class="form-group">
+                    <label>Nama & Gelar *</label>
+                    <input type="text" id="authorName" placeholder="contoh: Dr. Nama Anda, M.Si" required>
+                </div>
+                <div class="form-group">
+                    <label>Konten Diskusi *</label>
+                    <textarea id="threadContent" placeholder="Jelaskan topik diskusi, pertanyaan penelitian, atau ajakan kolaborasi Anda..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tag (pisahkan dengan koma)</label>
+                    <input type="text" id="threadTags" placeholder="contoh: Oseanografi, Klimatologi, Metodologi">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Publikasikan Diskusi</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>SIMAKLAUT</strong> - Sistem Informasi Maritim dan Klimatologi Laut</p>
+        <p>Dikembangkan untuk mendukung riset dan monitoring oseanografi di Provinsi Banten</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">Masih berdasarkan data simulasi.</p>
+        <p>KONTAK KAMI: </p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
