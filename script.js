@@ -9,37 +9,37 @@ const BMKG_KODE_WILAYAH = {
 };
 
 // Data Simulasi Tetap (untuk Pasang Surut dan Oseanografi)
-// Karena API BMKG yang digunakan hanya menyediakan data cuaca/klimatologi
+// Menambahkan data cuaca default (fallback) jika BMKG gagal diakses
 const locationData = {
     anyer: {
         tideStatus: 'Pasang', tideHeight: '1.8 m', nextHighTide: '14:30', nextLowTide: '20:15',
         seaTemp: '29.2°C', salinity: '33.5 PSU', waveHeight: '0.8 m', wavePeriod: '5.2 detik', current: '0.5 m/s',
-        coords: [-6.0879, 105.8838], bmkgData: {} // Placeholder untuk data BMKG
+        coords: [-6.0879, 105.8838], bmkgData: { weatherCondition: 'Cerah Berawan', temperature: '28°C', humidity: '75%', windSpeed: '12 km/h', windDirection: 'Barat Laut' }
     },
     carita: {
         tideStatus: 'Surut', tideHeight: '0.9 m', nextHighTide: '15:45', nextLowTide: '21:30',
         seaTemp: '28.8°C', salinity: '33.2 PSU', waveHeight: '1.1 m', wavePeriod: '5.8 detik', current: '0.6 m/s',
-        coords: [-6.3166, 105.8303], bmkgData: {}
+        coords: [-6.3166, 105.8303], bmkgData: { weatherCondition: 'Berawan', temperature: '27°C', humidity: '78%', windSpeed: '15 km/h', windDirection: 'Barat' }
     },
     sawarna: {
         tideStatus: 'Pasang', tideHeight: '2.1 m', nextHighTide: '13:15', nextLowTide: '19:45',
         seaTemp: '29.5°C', salinity: '34.0 PSU', waveHeight: '1.5 m', wavePeriod: '6.5 detik', current: '0.8 m/s',
-        coords: [-6.9849, 106.3006], bmkgData: {}
+        coords: [-6.9849, 106.3006], bmkgData: { weatherCondition: 'Hujan Ringan', temperature: '25°C', humidity: '85%', windSpeed: '8 km/h', windDirection: 'Tenggara' }
     },
     tanjunglesung: {
         tideStatus: 'Surut', tideHeight: '0.7 m', nextHighTide: '16:00', nextLowTide: '22:00',
         seaTemp: '29.0°C', salinity: '33.3 PSU', waveHeight: '0.6 m', wavePeriod: '4.8 detik', current: '0.4 m/s',
-        coords: [-6.4793, 105.6533], bmkgData: {}
+        coords: [-6.4793, 105.6533], bmkgData: { weatherCondition: 'Cerah', temperature: '29°C', humidity: '70%', windSpeed: '10 km/h', windDirection: 'Timur' }
     },
     labuan: {
         tideStatus: 'Pasang', tideHeight: '1.6 m', nextHighTide: '14:45', nextLowTide: '20:30',
         seaTemp: '28.5°C', salinity: '33.0 PSU', waveHeight: '1.3 m', wavePeriod: '6.0 detik', current: '0.7 m/s',
-        coords: [-6.3714, 105.8189], bmkgData: {}
+        coords: [-6.3714, 105.8189], bmkgData: { weatherCondition: 'Berawan Tebal', temperature: '26°C', humidity: '80%', windSpeed: '18 km/h', windDirection: 'Barat Daya' }
     },
     bagedur: {
         tideStatus: 'Surut', tideHeight: '1.0 m', nextHighTide: '15:30', nextLowTide: '21:15',
         seaTemp: '29.8°C', salinity: '33.8 PSU', waveHeight: '0.9 m', wavePeriod: '5.5 detik', current: '0.5 m/s',
-        coords: [-6.8139, 105.9821], bmkgData: {}
+        coords: [-6.8139, 105.9821], bmkgData: { weatherCondition: 'Cerah', temperature: '28°C', humidity: '72%', windSpeed: '9 km/h', windDirection: 'Selatan' }
     }
 };
 
@@ -54,16 +54,17 @@ async function fetchWeatherData(kode_adm4) {
     try {
         const response = await fetch(ENDPOINT_API);
         
+        // Cek status respon, termasuk jika terjadi error non-CORS
         if (!response.ok) {
             console.error(`Error fetching BMKG data for ${kode_adm4}: HTTP status ${response.status}`);
-            return { error: 'Gagal mengambil data dari BMKG.' };
+            return { error: `Gagal ambil data BMKG. Status HTTP: ${response.status}` };
         }
 
         const data = await response.json();
         const prakiraanData = data.data_cuaca?.prakiraan_cuaca?.[0]?.daftar_prakiraan;
 
         if (!prakiraanData || prakiraanData.length === 0) {
-            return { error: 'Data prakiraan tidak ditemukan.' };
+            return { error: 'Data prakiraan tidak ditemukan (mungkin kode wilayah tidak ada).' };
         }
 
         // Ambil data prakiraan cuaca yang paling awal (current/terdekat)
@@ -73,14 +74,15 @@ async function fetchWeatherData(kode_adm4) {
             weatherCondition: currentForecast.kondisi || 'N/A',
             temperature: `${currentForecast.t}°C` || 'N/A',
             humidity: `${currentForecast.rh}%` || 'N/A',
-            windSpeed: `${currentForecast.ws} km/h` || 'N/A', // Asumsi BMKG memberikan dalam knots, diubah ke km/h (1 knot ≈ 1.852 km/h) atau tetap gunakan nilai mentah jika asumsi berbeda.
+            windSpeed: `${currentForecast.ws} km/h` || 'N/A',
             windDirection: currentForecast.wd || 'N/A',
             fetchTime: new Date().toLocaleTimeString('id-ID')
         };
 
     } catch (error) {
-        console.error("Terjadi kesalahan:", error);
-        return { error: error.message };
+        // Ini akan menangkap error koneksi atau CORS
+        console.error("Terjadi kesalahan koneksi/CORS:", error);
+        return { error: `Gagal koneksi ke BMKG. Cek CORS atau koneksi internet. Detail: ${error.message}` };
     }
 }
 
@@ -89,34 +91,30 @@ async function fetchWeatherData(kode_adm4) {
  */
 async function fetchAllBMKGData() {
     const locations = Object.keys(BMKG_KODE_WILAYAH);
-    
+    let fetchSuccessful = false;
+
     for (const loc of locations) {
         const kode = BMKG_KODE_WILAYAH[loc];
         const dataBMKG = await fetchWeatherData(kode);
         
         if (!dataBMKG.error) {
+            // Jika berhasil, update data dan tandai fetch berhasil
             locationData[loc].bmkgData = dataBMKG;
+            fetchSuccessful = true;
         } else {
-            console.warn(`Menggunakan data simulasi untuk ${loc} karena error BMKG: ${dataBMKG.error}`);
-            // Fallback ke data simulasi jika BMKG gagal
-            locationData[loc].bmkgData = { 
-                weatherCondition: locationData[loc].weatherCondition || 'N/A', 
-                temperature: locationData[loc].temperature || 'N/A',
-                humidity: locationData[loc].humidity || 'N/A',
-                windSpeed: locationData[loc].windSpeed || 'N/A',
-                windDirection: locationData[loc].windDirection || 'N/A',
-                error: `Gagal ambil data BMKG. Menampilkan data simulasi/fallback.`
-            };
+            // Jika gagal, gunakan data simulasi (fallback) yang sudah ada di locationData
+            locationData[loc].bmkgData.error = dataBMKG.error; 
+            locationData[loc].bmkgData.isFallback = true;
         }
     }
     
     // Setelah semua data diambil, update dashboard dengan lokasi default
     const defaultLocation = document.getElementById('locationSelect').value || 'anyer';
-    updateDashboardData(defaultLocation);
+    updateDashboardData(defaultLocation, !fetchSuccessful);
 }
 
 
-function updateDashboardData(location) {
+function updateDashboardData(location, isGlobalError = false) {
     const data = locationData[location];
     const bmkg = data.bmkgData || {};
     
@@ -131,28 +129,46 @@ function updateDashboardData(location) {
     document.getElementById('wavePeriod').textContent = data.wavePeriod;
     document.getElementById('current').textContent = data.current;
 
-    // --- Data Real (Cuaca dari BMKG) ---
-    document.getElementById('weatherCondition').textContent = bmkg.weatherCondition || 'Memuat...';
-    document.getElementById('temperature').textContent = bmkg.temperature || 'Memuat...';
-    document.getElementById('humidity').textContent = bmkg.humidity || 'Memuat...';
-    document.getElementById('windSpeed').textContent = bmkg.windSpeed || 'Memuat...';
-    document.getElementById('windDirection').textContent = bmkg.windDirection || 'Memuat...';
+    // --- Data Real (Cuaca dari BMKG atau Fallback) ---
+    document.getElementById('weatherCondition').textContent = bmkg.weatherCondition || 'N/A';
+    document.getElementById('temperature').textContent = bmkg.temperature || 'N/A';
+    document.getElementById('humidity').textContent = bmkg.humidity || 'N/A';
+    document.getElementById('windSpeed').textContent = bmkg.windSpeed || 'N/A';
+    document.getElementById('windDirection').textContent = bmkg.windDirection || 'N/A';
     
     // Tambahkan notifikasi jika ada error dari BMKG
     const cuacaCard = document.querySelector('.dashboard-grid .card:nth-child(2)');
-    if (bmkg.error && !document.getElementById('bmkg-error')) {
+    // Hapus pesan error sebelumnya
+    if (document.getElementById('bmkg-error')) {
+        document.getElementById('bmkg-error').remove();
+    }
+    
+    if (bmkg.error || isGlobalError) {
         const errorDiv = document.createElement('div');
         errorDiv.id = 'bmkg-error';
-        errorDiv.className = 'alert alert-info show';
-        errorDiv.textContent = `⚠️ ${bmkg.error}`;
+        errorDiv.className = 'alert alert-info';
+        errorDiv.style.color = '#ff9800'; // Warna oranye untuk peringatan
+        errorDiv.style.backgroundColor = 'rgba(255, 152, 0, 0.1)';
+        errorDiv.style.padding = '10px';
+        errorDiv.style.borderRadius = '5px';
+        errorDiv.style.marginBottom = '10px';
+
+        let errorMessage = bmkg.error || "Gagal mengambil data BMKG untuk semua lokasi.";
+        
+        // Peringatan Khusus CORS
+        if (errorMessage.includes("Failed to fetch")) {
+             errorMessage = "⚠️ **ERROR KONEKSI (CORS/Lokal)**. Data Cuaca menggunakan data Fallback. Pastikan Anda menjalankan website melalui Live Server (http://) dan bukan dari file:///";
+        } else if (bmkg.isFallback) {
+             errorMessage = `⚠️ Gagal ambil data BMKG (${bmkg.error}). Menampilkan data Fallback/Simulasi.`;
+        }
+        
+        errorDiv.innerHTML = errorMessage;
         cuacaCard.prepend(errorDiv);
-    } else if (document.getElementById('bmkg-error')) {
-        document.getElementById('bmkg-error').remove();
     }
 }
 
 
-// Leaflet Map (Kode tidak berubah, hanya memastikan data marker menggunakan BMKG data jika ada)
+// Leaflet Map (Kode tidak berubah)
 let map;
 window.mapInitialized = false;
 
@@ -504,6 +520,6 @@ if(contactModal) {
     updateDashboardData('anyer');
 
     // Interval untuk mengambil data BMKG ulang setiap 30 menit (misalnya)
-    // Agar data cuaca selalu terupdate. (BMKG update 2x sehari)
     setInterval(fetchAllBMKGData, 1800000); // 1800000 ms = 30 menit
 });
+
