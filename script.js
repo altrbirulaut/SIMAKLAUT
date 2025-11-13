@@ -1,5 +1,6 @@
 // Simulasi data untuk lokasi berbeda
 const locationData = {
+    // ... data lokasi yang sudah ada ...
     anyer: {
         tideStatus: 'Pasang',
         tideHeight: '1.8 m',
@@ -15,7 +16,7 @@ const locationData = {
         waveHeight: '0.8 m',
         wavePeriod: '5.2 detik',
         current: '0.5 m/s',
-        coords: [-6.0373, 105.9339]
+        coords: [-6.0879,105.8838]
     },
     carita: {
         tideStatus: 'Surut',
@@ -32,7 +33,7 @@ const locationData = {
         waveHeight: '1.1 m',
         wavePeriod: '5.8 detik',
         current: '0.6 m/s',
-        coords: [-6.2769, 105.8597]
+        coords: [-6.3166,105.8303]
     },
     sawarna: {
         tideStatus: 'Pasang',
@@ -49,7 +50,7 @@ const locationData = {
         waveHeight: '1.5 m',
         wavePeriod: '6.5 detik',
         current: '0.8 m/s',
-        coords: [-7.0167, 106.4167]
+        coords: [-6.9849,106.3006]
     },
     tanjunglesung: {
         tideStatus: 'Surut',
@@ -66,7 +67,7 @@ const locationData = {
         waveHeight: '0.6 m',
         wavePeriod: '4.8 detik',
         current: '0.4 m/s',
-        coords: [-6.5667, 105.6833]
+        coords: [-6.4793,105.6533]
     },
     labuan: {
         tideStatus: 'Pasang',
@@ -83,7 +84,7 @@ const locationData = {
         waveHeight: '1.3 m',
         wavePeriod: '6.0 detik',
         current: '0.7 m/s',
-        coords: [-6.3667, 105.7833]
+        coords: [-6.3714,105.8189]
     },
     bagedur: {
         tideStatus: 'Surut',
@@ -100,7 +101,7 @@ const locationData = {
         waveHeight: '0.9 m',
         wavePeriod: '5.5 detik',
         current: '0.5 m/s',
-        coords: [-6.7833, 106.3000]
+        coords: [-6.8139,105.9821]
     }
 };
 
@@ -174,8 +175,61 @@ function initMap() {
     window.mapInitialized = true;
 }
 
-// Global functions for modal (needed because they are called via inline HTML onclick)
+
+// --- START: New Login/Logout/SignUp Functions ---
+
+// Mock user state
+let currentUser = null; 
+
+function updateHeaderButtons() {
+    const loginBtn = document.getElementById('loginBtn');
+    const userBtn = document.getElementById('userBtn');
+    const userNameSpan = document.getElementById('userName');
+
+    if (currentUser) {
+        loginBtn.style.display = 'none';
+        userBtn.style.display = 'block';
+        userNameSpan.textContent = currentUser.username || 'Pengguna';
+    } else {
+        loginBtn.style.display = 'block';
+        userBtn.style.display = 'none';
+    }
+}
+
+window.openLoginModal = function() {
+    document.getElementById('signUpModal').classList.remove('active');
+    document.getElementById('loginModal').classList.add('active');
+}
+
+window.closeLoginModal = function() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('loginForm').reset();
+}
+
+window.openSignUpModal = function() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.getElementById('signUpModal').classList.add('active');
+}
+
+window.closeSignUpModal = function() {
+    document.getElementById('signUpModal').classList.remove('active');
+    document.getElementById('signUpForm').reset();
+}
+
+window.logout = function() {
+    currentUser = null;
+    updateHeaderButtons();
+    alert("Anda telah berhasil keluar (Logout).");
+}
+
+// Global functions for other modals (needed because they are called via inline HTML onclick)
 window.openNewThreadModal = function() {
+    // Only allow forum access if logged in
+    if (!currentUser) {
+        alert("Anda harus masuk (login) untuk membuat diskusi baru.");
+        openLoginModal();
+        return;
+    }
     document.getElementById('newThreadModal').classList.add('active');
 }
 
@@ -183,20 +237,27 @@ window.closeNewThreadModal = function() {
     document.getElementById('newThreadModal').classList.remove('active');
     document.getElementById('newThreadForm').reset();
 }
+// --- END: New Login/Logout/SignUp Functions ---
 
-window.openLoginModal = function() {
-    alert("Login modal logic goes here. (Not implemented in this demo.)");
-    // Could display a dedicated login modal
+// --- START: New Contact Modal Functions ---
+
+window.openContactModal = function() {
+    document.getElementById('contactModal').classList.add('active');
 }
 
-window.logout = function() {
-    alert("Logout logic goes here.");
-    // Could hide user button and show login button
+window.closeContactModal = function() {
+    document.getElementById('contactModal').classList.remove('active');
+    document.getElementById('contactForm').reset();
 }
+
+// --- END: New Contact Modal Functions ---
 
 
 // Event Listeners setelah DOM dimuat
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize header buttons state
+    updateHeaderButtons();
+
     // Navigation
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -225,7 +286,131 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Forum Functions
+    // --- START: New Login/SignUp Form Handlers ---
+    const loginForm = document.getElementById('loginForm');
+    if(loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Mock API Login Logic
+            if (username === "riset" && password === "simaklaut") {
+                currentUser = { username: "Riset_BMKG", fullname: "Tim Riset BMKG" };
+                alert(`Selamat datang, ${currentUser.username}! Login berhasil.`);
+                closeLoginModal();
+                updateHeaderButtons();
+            } else {
+                alert("Login gagal. Nama pengguna mock adalah 'riset' dan kata sandi 'simaklaut'.");
+            }
+        });
+    }
+
+    const signUpForm = document.getElementById('signUpForm');
+    if(signUpForm) {
+        signUpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullname = document.getElementById('signupFullname').value;
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const email = document.getElementById('signupEmail').value;
+            
+            // Mock API Sign Up Logic
+            if (password.length < 6) {
+                alert("Kata sandi harus minimal 6 karakter.");
+                return;
+            }
+            
+            // Assume successful registration for mock
+            alert(`Pendaftaran berhasil untuk ${fullname} dengan username: ${username}! Silakan masuk (login).`);
+            closeSignUpModal();
+            openLoginModal();
+        });
+    }
+
+    // Handle modal clicks outside content area
+    document.getElementById('loginModal').addEventListener('click', (e) => {
+        if (e.target.id === 'loginModal') closeLoginModal();
+    });
+
+    document.getElementById('signUpModal').addEventListener('click', (e) => {
+        if (e.target.id === 'signUpModal') closeSignUpModal();
+    });
+    // --- END: New Login/SignUp Form Handlers ---
+
+// --- START: New Contact Form Handler ---
+const contactForm = document.getElementById('contactForm');
+if(contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const feedback = document.getElementById('contactFeedback').value;
+
+        // Konfigurasi Web3Forms
+        const accessKey = "6ca28dc9-17ae-44ce-ae53-8a279705e575";
+        const apiUrl = "https://api.web3forms.com/submit";
+
+        // Menampilkan indikator loading
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.textContent = "Mengirim...";
+        submitButton.disabled = true;
+
+        // Data yang akan dikirim ke Web3Forms
+        const formData = {
+            access_key: accessKey,
+            name: name,
+            email: email,
+            message: feedback,
+            subject: `Feedback SIMAKLAUT dari ${name}`,
+            from_name: 'SIMAKLAUT Feedback System',
+            reply_to: email
+        };
+
+        // Mengirim data ke Web3Forms
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Terima kasih, ${name}! Feedback Anda telah berhasil dikirim. Kami akan membalas ke ${email} jika diperlukan.`);
+                window.closeContactModal();
+                contactForm.reset();
+            } else {
+                throw new Error(data.message || 'Terjadi kesalahan saat mengirim feedback');
+            }
+        })
+        .catch(error => {
+            console.error('Error sending feedback:', error);
+            alert(`Maaf, terjadi kesalahan saat mengirim feedback: ${error.message}. Silakan coba lagi nanti.`);
+        })
+        .finally(() => {
+            // Mengembalikan tombol ke keadaan semula
+            submitButton.textContent = originalButtonText;
+            submitButton.disabled = false;
+        });
+    });
+}
+
+// Close contact modal when clicking outside
+const contactModal = document.getElementById('contactModal');
+if(contactModal) {
+    contactModal.addEventListener('click', (e) => {
+        if (e.target === contactModal) {
+            window.closeContactModal();
+        }
+    });
+}
+// --- END: New Contact Form Handler ---
+    
+    // Forum Functions (Update to check login status)
     const newThreadForm = document.getElementById('newThreadForm');
     if(newThreadForm) {
         newThreadForm.addEventListener('submit', (e) => {
