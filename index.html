@@ -41,7 +41,7 @@
 
             <div class="dashboard-grid">
                 <div class="card">
-                    <h3><span class="card-icon">🌊</span> Pasang Surut</h3>
+                    <h3><span class="card-icon">🌊</span> Pasang Surut (DEMO)</h3>
                     <div class="data-item">
                         <span class="data-label">Status Saat Ini</span>
                         <span class="data-value" id="tideStatus">Pasang</span>
@@ -117,7 +117,7 @@
             <div class="card">
                 <h3>📍 Informasi Lokasi</h3>
                 <p style="color: #e0e7ff; line-height: 1.6; margin-top: 1rem;">
-                    Deskripsi. Gatau ya Allah ya Allah, ga ngerti ini gue ngapain lagi... Udahan pls.
+                    Deskripsi.
                 </p>
             </div>
         </div>
@@ -291,12 +291,90 @@
         </div>
     </div>
 
-    <footer>
-        <p><strong>SIMAKLAUT</strong> - Sistem Informasi Maritim dan Klimatologi Laut</p>
-        <p>Dikembangkan untuk mendukung riset dan monitoring oseanografi di Provinsi Banten</p>
-        <p style="margin-top: 1rem; font-size: 0.85rem;">Masih berdasarkan data simulasi.</p>
-        <p>KONTAK KAMI: </p>
-    </footer>
+<footer>
+    <p><strong>SIMAKLAUT</strong> - Sistem Informasi Maritim dan Klimatologi Laut</p>
+    <p>Dikembangkan untuk mendukung riset dan monitoring oseanografi di Provinsi Banten</p>
+    <p style="margin-top: 1rem; font-size: 0.85rem;">Data Pasang Surut masih berdasarkan data simulasi.</p>
+    <p style="margin-top: 1rem;">
+        <button class="contact-btn" onclick="openContactModal()">📧 Contact Us</button>
+    </p>
+</footer>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Masuk ke SIMAKLAUT (DEMO)</h3>
+                <button class="close-modal" onclick="closeLoginModal()">×</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Masukkan nama pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label>Kata Sandi</label>
+                    <input type="password" id="loginPassword" placeholder="Masukkan kata sandi" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Masuk</button>
+            </form>
+            <div style="text-align: center; margin-top: 1.5rem; color: #b3d9ff; font-size: 0.9rem;">
+                Belum punya akun? 
+                <span onclick="openSignUpModal()" style="color: #64b5f6; font-weight: bold; cursor: pointer; text-decoration: underline;">Daftar di sini</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="signUpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Daftar Akun Baru (DEMO)</h3>
+                <button class="close-modal" onclick="closeSignUpModal()">×</button>
+            </div>
+            <form id="signUpForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="signupUsername" placeholder="Buat nama pengguna" required>
+                </div>
+                <div class="form-group">
+                    <label>Kata Sandi</label>
+                    <input type="password" id="signupPassword" placeholder="Buat kata sandi (min. 6 karakter)" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="Email institusi/riset Anda" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Daftar & Buat Akun</button>
+            </form>
+            <div style="text-align: center; margin-top: 1.5rem; color: #b3d9ff; font-size: 0.9rem;">
+                Sudah punya akun? 
+                <span onclick="openLoginModal()" style="color: #64b5f6; font-weight: bold; cursor: pointer; text-decoration: underline;">Masuk di sini</span>
+            </div>
+        </div>
+    </div>
+
+<div id="contactModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Kirim Feedback</h3>
+            <button class="close-modal" onclick="closeContactModal()">×</button>
+        </div>
+        <form id="contactForm">
+            <div class="form-group">
+                <label>Nama Anda</label>
+                <input type="text" id="contactName" placeholder="Nama lengkap" required>
+            </div>
+            <div class="form-group">
+                <label>Email Anda</label>
+                <input type="email" id="contactEmail" placeholder="Email untuk balasan" required>
+            </div>
+            <div class="form-group">
+                <label>Pesan</label>
+                <textarea id="contactFeedback" placeholder="Tuliskan saran, kritik, atau pertanyaan di sini..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">Kirim Feedback</button>
+        </form>
+    </div>
+</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script src="script.js"></script>
 </body>
