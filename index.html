@@ -179,89 +179,112 @@
             </div>
         </div>
 
-        <div id="forum" class="section">
-            <div class="forum-container">
-                <div class="forum-header">
-                    <h2>💬 Forum Diskusi Akademisi & Peneliti (DEMO)</h2>
-                    <button class="btn-primary" onclick="openNewThreadModal()">+ Buat Diskusi Baru</button>
+<div id="forum" class="section">
+    <div class="forum-container">
+        <div class="forum-header">
+            <h2>💬 Forum Diskusi Akademisi & Peneliti (DEMO)</h2>
+            <button class="btn-primary" onclick="openNewThreadModal()">+ Buat Diskusi Baru</button>
+        </div>
+
+        <div id="discussionList">
+            <div class="discussion-thread" data-thread-id="1">
+                <div class="thread-header">
+                    <div>
+                        <div class="thread-title">Metode Sampling Kualitas Air Laut di Perairan Dangkal</div>
+                        <div class="thread-meta">oleh Dr. Ahmad Santoso • 2 hari yang lalu</div>
+                    </div>
+                    <span class="status-badge status-normal">Aktif</span>
                 </div>
-
-                <div id="discussionList">
-                    <div class="discussion-thread">
-                        <div class="thread-header">
-                            <div>
-                                <div class="thread-title">Metode Sampling Kualitas Air Laut di Perairan Dangkal</div>
-                                <div class="thread-meta">oleh Dr. Ahmad Santoso • 2 hari yang lalu</div>
-                            </div>
-                            <span class="status-badge status-normal">Aktif</span>
+                <div class="thread-content">
+                    Saya sedang melakukan penelitian mengenai parameter kualitas air di zona litoral Pantai Anyer. Ingin berdiskusi mengenai metode sampling yang paling efektif untuk perairan dangkal dengan substrat berpasir. Apakah ada yang memiliki pengalaman dengan...
+                </div>
+                <div class="thread-footer">
+                    <span>👁️ 124 dilihat</span>
+                    <span id="replies-count-1">💬 15 balasan</span>
+                    <span>🏷️ Oseanografi, Metodologi</span>
+                </div>
+                <div class="replies-section" id="replies-1">
+                    <button class="toggle-replies-btn" onclick="toggleReplies('1')">Lihat Balasan (15)</button>
+                    <div class="reply-list" style="display: none;">
                         </div>
-                        <div class="thread-content">
-                            Saya sedang melakukan penelitian mengenai parameter kualitas air di zona litoral Pantai Anyer. Ingin berdiskusi mengenai metode sampling yang paling efektif untuk perairan dangkal dengan substrat berpasir. Apakah ada yang memiliki pengalaman dengan...
-                        </div>
-                        <div class="thread-footer">
-                            <span>👁️ 124 dilihat</span>
-                            <span>💬 15 balasan</span>
-                            <span>🏷️ Oseanografi, Metodologi</span>
-                        </div>
-                    </div>
-
-                    <div class="discussion-thread">
-                        <div class="thread-header">
-                            <div>
-                                <div class="thread-title">Dampak Perubahan Iklim terhadap Produktivitas Perikanan Banten</div>
-                                <div class="thread-meta">oleh Prof. Siti Nurhaliza, M.Si • 5 hari yang lalu</div>
-                            </div>
-                            <span class="status-badge status-normal">Aktif</span>
-                        </div>
-                        <div class="thread-content">
-                            Berdasarkan data BMKG 5 tahun terakhir, terjadi peningkatan SST (Sea Surface Temperature) yang signifikan. Bagaimana korelasi ini dengan hasil tangkapan nelayan lokal? Saya mengundang kolaborasi untuk penelitian longitudinal...
-                        </div>
-                        <div class="thread-footer">
-                            <span>👁️ 287 dilihat</span>
-                            <span>💬 32 balasan</span>
-                            <span>🏷️ Klimatologi, Perikanan</span>
-                        </div>
-                    </div>
-
-                    <div class="discussion-thread">
-                        <div class="thread-header">
-                            <div>
-                                <div class="thread-title">Validasi Data Pasang Surut dari Model Numerik vs Observasi Lapangan</div>
-                                <div class="thread-meta">oleh Ir. Budi Prasetyo • 1 minggu yang lalu</div>
-                            </div>
-                            <span class="status-badge status-normal">Aktif</span>
-                        </div>
-                        <div class="thread-content">
-                            Diskusi teknis mengenai akurasi prediksi pasang surut menggunakan model harmonik dibandingkan dengan pengukuran tide gauge di Tanjung Lesung. Ada deviasi sekitar 8-12 cm yang menarik untuk dianalisis lebih lanjut...
-                        </div>
-                        <div class="thread-footer">
-                            <span>👁️ 156 dilihat</span>
-                            <span>💬 21 balasan</span>
-                            <span>🏷️ Hidrodinamika, Model</span>
-                        </div>
-                    </div>
-
-                    <div class="discussion-thread">
-                        <div class="thread-header">
-                            <div>
-                                <div class="thread-title">Dataset Batimetri Resolusi Tinggi untuk Pantai Sawarna</div>
-                                <div class="thread-meta">oleh M.Sc. Rina Kartika • 2 minggu yang lalu</div>
-                            </div>
-                            <span class="status-badge status-warning">Butuh Bantuan</span>
-                        </div>
-                        <div class="thread-content">
-                            Mencari dataset batimetri dengan resolusi minimal 10m untuk keperluan pemodelan tsunami di Sawarna. Apakah ada yang memiliki akses atau rekomendasi sumber data dari BIG atau institusi lain?
-                        </div>
-                        <div class="thread-footer">
-                            <span>👁️ 93 dilihat</span>
-                            <span>💬 8 balasan</span>
-                            <span>🏷️ Data, Batimetri, GIS</span>
-                        </div>
+                    <div class="new-reply-form" style="display: none;">
+                        <input type="text" id="reply-author-1" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
+                        <input type="text" id="reply-content-1" placeholder="Tulis balasan Anda..." style="width: calc(100% - 220px); padding: 5px; border-radius: 5px;">
+                        <button onclick="postReply('1')" style="padding: 5px 10px; margin-left: 10px;" class="btn-primary">Kirim</button>
                     </div>
                 </div>
             </div>
+
+            <div class="discussion-thread" data-thread-id="2">
+                <div class="thread-header">
+                    </div>
+                <div class="thread-content">
+                    Berdasarkan data BMKG 5 tahun terakhir, terjadi peningkatan SST (Sea Surface Temperature) yang signifikan. Bagaimana korelasi ini dengan hasil tangkapan nelayan lokal? Saya mengundang kolaborasi untuk penelitian longitudinal...
+                </div>
+                <div class="thread-footer">
+                    <span>👁️ 287 dilihat</span>
+                    <span id="replies-count-2">💬 32 balasan</span>
+                    <span>🏷️ Klimatologi, Perikanan</span>
+                </div>
+                 <div class="replies-section" id="replies-2">
+                    <button class="toggle-replies-btn" onclick="toggleReplies('2')">Lihat Balasan (32)</button>
+                    <div class="reply-list" style="display: none;"></div>
+                    <div class="new-reply-form" style="display: none;">
+                        <input type="text" id="reply-author-2" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
+                        <input type="text" id="reply-content-2" placeholder="Tulis balasan Anda..." style="width: calc(100% - 220px); padding: 5px; border-radius: 5px;">
+                        <button onclick="postReply('2')" style="padding: 5px 10px; margin-left: 10px;" class="btn-primary">Kirim</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="discussion-thread" data-thread-id="3">
+                <div class="thread-header">
+                    </div>
+                <div class="thread-content">
+                    Diskusi teknis mengenai akurasi prediksi pasang surut menggunakan model harmonik dibandingkan dengan pengukuran tide gauge di Tanjung Lesung. Ada deviasi sekitar 8-12 cm yang menarik untuk dianalisis lebih lanjut...
+                </div>
+                <div class="thread-footer">
+                    <span>👁️ 156 dilihat</span>
+                    <span id="replies-count-3">💬 21 balasan</span>
+                    <span>🏷️ Hidrodinamika, Model</span>
+                </div>
+                 <div class="replies-section" id="replies-3">
+                    <button class="toggle-replies-btn" onclick="toggleReplies('3')">Lihat Balasan (21)</button>
+                    <div class="reply-list" style="display: none;"></div>
+                    <div class="new-reply-form" style="display: none;">
+                        <input type="text" id="reply-author-3" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
+                        <input type="text" id="reply-content-3" placeholder="Tulis balasan Anda..." style="width: calc(100% - 220px); padding: 5px; border-radius: 5px;">
+                        <button onclick="postReply('3')" style="padding: 5px 10px; margin-left: 10px;" class="btn-primary">Kirim</button>
+                    </div>
+                </div>
+            </div>
+
+             <div class="discussion-thread" data-thread-id="4">
+                <div class="thread-header">
+                    </div>
+                <div class="thread-content">
+                    Mencari dataset batimetri dengan resolusi minimal 10m untuk keperluan pemodelan tsunami di Sawarna. Apakah ada yang memiliki akses atau rekomendasi sumber data dari BIG atau institusi lain?
+                </div>
+                <div class="thread-footer">
+                    <span>👁️ 93 dilihat</span>
+                    <span id="replies-count-4">💬 8 balasan</span>
+                    <span>🏷️ Data, Batimetri, GIS</span>
+                </div>
+                 <div class="replies-section" id="replies-4">
+                    <button class="toggle-replies-btn" onclick="toggleReplies('4')">Lihat Balasan (8)</button>
+                    <div class="reply-list" style="display: none;"></div>
+                    <div class="new-reply-form" style="display: none;">
+                        <input type="text" id="reply-author-4" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
+                        <input type="text" id="reply-content-4" placeholder="Tulis balasan Anda..." style="width: calc(100% - 220px); padding: 5px; border-radius: 5px;">
+                        <button onclick="postReply('4')" style="padding: 5px 10px; margin-left: 10px;" class="btn-primary">Kirim</button>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
+</div>
+
 
     <div id="newThreadModal" class="modal">
         <div class="modal-content">
@@ -294,7 +317,6 @@
 <footer>
     <p><strong>SIMAKLAUT</strong> - Sistem Informasi Maritim dan Klimatologi Laut</p>
     <p>Dikembangkan untuk mendukung riset dan monitoring oseanografi di Provinsi Banten</p>
-    <p style="margin-top: 1rem; font-size: 0.85rem;">Data Pasang Surut masih berdasarkan data simulasi.</p>
     <p style="margin-top: 1rem;">
         <button class="contact-btn" onclick="openContactModal()">📧 Contact Us</button>
     </p>
