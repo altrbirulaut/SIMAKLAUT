@@ -553,18 +553,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login Form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            if (username === "riset" && password === "simaklaut") {
-                currentUser = { username: "Riset_BMKG", fullname: "Tim Riset BMKG" };
-                alert(`Selamat datang, ${currentUser.username}! Login berhasil.`);
-                closeLoginModal();
-                updateHeaderButtons();
-            } else {
-                alert("Login gagal. Nama pengguna mock adalah 'riset' dan kata sandi 'simaklaut'.");
+            // Disable button dan tampilkan loading
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Memproses...';
+            submitButton.disabled = true;
+
+            try {
+                const result = await window.AuthService.loginUser(username, password);
+                
+                if (result.success) {
+                    currentUser = result.data.user;
+                    alert(`Selamat datang, ${currentUser.full_name || currentUser.username}! Login berhasil.`);
+                    closeLoginModal();
+                    updateHeaderButtons();
+                } else {
+                    alert(`Login gagal: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Terjadi kesalahan: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
             }
         });
     }
@@ -572,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // SignUp Form
     const signUpForm = document.getElementById('signUpForm');
     if (signUpForm) {
-        signUpForm.addEventListener('submit', (e) => {
+        signUpForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('signupUsername').value;
             const password = document.getElementById('signupPassword').value;
@@ -582,10 +597,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Kata sandi harus minimal 6 karakter.");
                 return;
             }
+
+            // Disable button dan tampilkan loading
+            const submitButton = signUpForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Memproses...';
+            submitButton.disabled = true;
             
-            alert(`Pendaftaran berhasil untuk ${username}! Silakan masuk (login).`);
-            closeSignUpModal();
-            openLoginModal();
+            try {
+                const result = await window.AuthService.registerUser(username, email, password, username);
+                
+                if (result.success) {
+                    alert(`Pendaftaran berhasil untuk ${username}! Silakan masuk (login).`);
+                    closeSignUpModal();
+                    openLoginModal();
+                } else {
+                    alert(`Pendaftaran gagal: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Terjadi kesalahan: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
         });
     }
 
@@ -832,3 +866,179 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDashboardData(currentLocation);
     }, 30 * 60 * 1000); // 30 menit
 });
+    // Edit Profile Modal Functions
+    window.openEditProfileModal = async function() {
+        if (!currentUser) {
+            alert('Silakan login terlebih dahulu.');
+            openLoginModal();
+            return;
+        }
+
+        // Load current user data
+        try {
+            const result = await window.AuthService.getUserProfile();
+            if (result.success) {
+                const user = result.data;
+                document.getElementById('editFullName').value = user.full_name || '';
+                document.getElementById('editEmail').value = user.email || '';
+                document.getElementById('editInstitution').value = user.institution || '';
+                document.getElementById('editFieldOfStudy').value = user.field_of_study || '';
+                document.getElementById('editPhone').value = user.phone || '';
+                document.getElementById('editBio').value = user.bio || '';
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+        }
+
+        document.getElementById('editProfileModal').classList.add('active');
+    }
+
+    window.closeEditProfileModal = function() {
+        document.getElementById('editProfileModal').classList.remove('active');
+        document.getElementById('editProfileForm').reset();
+    }
+
+    // Edit Profile Form Submit
+    const editProfileForm = document.getElementById('editProfileForm');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const profileData = {
+                full_name: document.getElementById('editFullName').value,
+                email: document.getElementById('editEmail').value,
+                institution: document.getElementById('editInstitution').value,
+                field_of_study: document.getElementById('editFieldOfStudy').value,
+                phone: document.getElementById('editPhone').value,
+                bio: document.getElementById('editBio').value
+            };
+
+            // Disable button
+            const submitButton = editProfileForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Menyimpan...';
+            submitButton.disabled = true;
+
+            try {
+                const result = await window.AuthService.updateUserProfile(profileData);
+                
+                if (result.success) {
+                    currentUser = result.data;
+                    updateHeaderButtons();
+                    alert('Profil berhasil diperbarui!');
+                    closeEditProfileModal();
+                } else {
+                    alert(`Gagal memperbarui profil: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Terjadi kesalahan: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
+    }
+
+    // Change Password Modal Functions
+    window.openChangePasswordModal = function() {
+        closeEditProfileModal();
+        document.getElementById('changePasswordModal').classList.add('active');
+    }
+
+    window.closeChangePasswordModal = function() {
+        document.getElementById('changePasswordModal').classList.remove('active');
+        document.getElementById('changePasswordForm').reset();
+    }
+
+    // Change Password Form Submit
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validasi
+            if (newPassword !== confirmPassword) {
+                alert('Password baru dan konfirmasi password tidak cocok!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('Password baru harus minimal 6 karakter!');
+                return;
+            }
+
+            // Disable button
+            const submitButton = changePasswordForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Memproses...';
+            submitButton.disabled = true;
+
+            try {
+                const result = await window.AuthService.changePassword(currentPassword, newPassword);
+                
+                if (result.success) {
+                    alert('Password berhasil diubah!');
+                    closeChangePasswordModal();
+                    changePasswordForm.reset();
+                } else {
+                    alert(`Gagal mengubah password: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Terjadi kesalahan: ${error.message}`);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+            }
+        });
+    }
+
+    // Modal close on outside click for new modals
+    const editProfileModal = document.getElementById('editProfileModal');
+    if (editProfileModal) {
+        editProfileModal.addEventListener('click', (e) => {
+            if (e.target.id === 'editProfileModal') closeEditProfileModal();
+        });
+    }
+
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    if (changePasswordModal) {
+        changePasswordModal.addEventListener('click', (e) => {
+            if (e.target.id === 'changePasswordModal') closeChangePasswordModal();
+        });
+    }
+
+    // Check if user is already logged in on page load
+    if (window.AuthService.isLoggedIn()) {
+        currentUser = window.AuthService.getUserData();
+        if (currentUser) {
+            updateHeaderButtons();
+        }
+    }
+
+    // --- Hamburger Menu Toggle ---
+
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mainNav = document.getElementById('mainNav');
+
+if (hamburgerBtn && mainNav) {
+    hamburgerBtn.addEventListener('click', () => {
+        // Toggle class 'open' pada elemen NAV
+        mainNav.classList.toggle('open');
+    });
+
+    // Opsional: Tutup menu saat salah satu tombol fitur diklik (hanya di mobile)
+    // Ini membantu saat pengguna memilih fitur, menu langsung tertutup.
+    const navButtons = mainNav.querySelectorAll('.nav-btn');
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Periksa jika class 'open' ada (artinya sedang di mode mobile/menu terbuka)
+            if (mainNav.classList.contains('open')) {
+                mainNav.classList.remove('open');
+            }
+        });
+    });
+}
