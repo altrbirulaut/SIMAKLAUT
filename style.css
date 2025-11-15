@@ -499,8 +499,6 @@ footer p {
     }
 }
 
-/* ... (kode style sebelumnya) ... */
-
 /* --- Forum Replies Style --- */
 .replies-section {
     margin-top: 1.5rem;
@@ -564,4 +562,73 @@ footer p {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 0.9rem;
+}
+
+.hamburger-btn {
+    display: none; /* Sembunyikan secara default di desktop */
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001; /* Pastikan di atas elemen lain */
+    padding: 0.5rem;
+}
+
+header nav {
+    display: flex; /* Navigasi tetap terlihat di desktop */
+    align-items: center;
+}
+
+header nav .nav-btn {
+    margin-left: 10px;
+}
+
+/* Tambahkan user-menu-btn untuk styling yang lebih baik */
+.user-menu-btn {
+    display: flex;
+    align-items: center;
+}
+
+/* --- Media Query untuk Mobile (Mulai dari 900px ke bawah) --- */
+@media (max-width: 900px) {
+    /* Tampilkan Hamburger Button */
+    .hamburger-btn {
+        display: block; 
+    }
+
+    /* Sembunyikan Menu Navigasi (Hamburger Menu) secara default */
+    header nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; /* Turunkan menu di bawah header */
+        right: 0;
+        width: 100%; /* Ambil lebar penuh layar */
+        background: #1e3a5f; /* Warna latar belakang menu */
+        border-top: 1px solid #2196f3;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        padding: 1rem 0;
+    }
+
+    /* Gaya untuk tombol di dalam menu mobile */
+    header nav .nav-btn {
+        width: 90%;
+        margin: 0.5rem auto;
+        padding: 1rem;
+        text-align: left;
+        border-radius: 5px;
+        background-color: rgba(33, 150, 243, 0.1); /* Latar belakang tombol */
+    }
+
+    /* Tampilkan Navigasi ketika class 'open' ditambahkan */
+    header nav.open {
+        display: flex;
+    }
+
+    .header-content {
+        /* Pastikan logo dan hamburger button sejajar */
+        justify-content: space-between; 
+    }
 }
