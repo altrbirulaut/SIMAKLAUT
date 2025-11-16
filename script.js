@@ -185,63 +185,63 @@ async function fetchBMKGWeather(beachKey) {
     }
 }
 
-/**
- * Proses data BMKG dan ekstrak informasi cuaca terkini
- */
 function processBMKGData(bmkgData) {
     try {
-        if (!bmkgData || !bmkgData.data || !bmkgData.data[0]) {
-            throw new Error('Invalid BMKG data structure');
+        // Pastikan struktur data benar
+        if (!bmkgData || !bmkgData.data || !bmkgData.data[0] || !bmkgData.data[0].cuaca) {
+            throw new Error("Struktur data BMKG tidak valid.");
         }
 
-        const locationData = bmkgData.data[0];
-        for (const dayData of cuacaPerHari) {
-            for (const hourData of dayData) {
-                console.log(hourData.t);
-            }
-        }
-        if (!cuaca || cuaca.length === 0) {
-            throw new Error('No weather data available');
-        }
+        const cuacaHarian = bmkgData.data[0].cuaca; // array 3 hari
+        const semuaData = [];
 
-        // Cari data untuk jam terdekat
-        const now = new Date();
-        let closest = null;
-        let minDiff = Infinity;
-
-        for (const weather of allWeatherData) {
-            const weatherTime = new Date(weather.datetime);
-            const diff = Math.abs(weatherTime - now);
-    
-        if (diff < minDiff) {
-            minDiff = diff;
-            closest = weather;
-            }
-        }
-
-        const currentHour = new Date().getHours();
-        let current = allWeatherData.find(w => {
-            const weatherHour = new Date(w.local_datetime).getHours();
-            return weatherHour === currentHour;
+        // Gabungkan seluruh jam dari semua hari
+        cuacaHarian.forEach(hari => {
+            hari.forEach(item => {
+                semuaData.push(item);
+            });
         });
 
-        if (!closestWeather) {
-            closestWeather = cuaca[0];
-        }
+        const now = new Date();
+
+        // Cari waktu cuaca yang paling dekat dengan waktu sekarang
+        let terdekat = semuaData[0];
+        let minSelisih = Infinity;
+
+        semuaData.forEach(item => {
+            const waktu = new Date(item.local_datetime);
+            const selisih = Math.abs(waktu - now);
+            if (selisih < minSelisih) {
+                minSelisih = selisih;
+                terdekat = item;
+            }
+        });
+
+        // Kode cuaca → deskripsi
+        const kondisi = terdekat.weather_desc || translateWeatherCode(terdekat.weather);
 
         return {
-            weatherCondition: translateWeatherCode(closestWeather.weather),
-            temperature: closestWeather.t ? `${Math.round(closestWeather.t)}°C` : 'N/A',
-            humidity: closestWeather.hu ? `${Math.round(closestWeather.hu)}%` : 'N/A',
-            windSpeed: closestWeather.ws ? `${Math.round(closestWeather.ws)} km/h` : 'N/A',
-            windDirection: translateWindDirection(closestWeather.wd_deg),
-            lastUpdate: closestWeather.datetime || new Date().toISOString()
+            weatherCondition: kondisi,
+            temperature: terdekat.t ? `${Math.round(terdekat.t)}°C` : "N/A",
+            humidity: terdekat.hu ? `${Math.round(terdekat.hu)}%` : "N/A",
+            windSpeed: terdekat.ws ? `${Math.round(terdekat.ws)} km/j` : "N/A",
+            windDirection: terdekat.wd ? `dari ${terdekat.wd}` : "N/A",
+            lastUpdate: terdekat.local_datetime
         };
+
     } catch (error) {
-        console.error('Error processing BMKG data:', error);
-        throw error;
+        console.error("Error processBMKGData:", error);
+        return {
+            weatherCondition: "N/A",
+            temperature: "N/A",
+            humidity: "N/A",
+            windSpeed: "N/A",
+            windDirection: "N/A",
+            lastUpdate: null
+        };
     }
 }
+
 
 /**
  * Update dashboard dengan data real-time dari BMKG + data simulasi oseanografi
@@ -1019,24 +1019,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Hamburger Menu Toggle ---
 
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const mainNav = document.getElementById('mainNav');
 
 if (hamburgerBtn && mainNav) {
+    // 1. Logika untuk membuka/menutup menu saat hamburger diklik
     hamburgerBtn.addEventListener('click', () => {
         // Toggle class 'open' pada elemen NAV
         mainNav.classList.toggle('open');
     });
 
-    // Opsional: Tutup menu saat salah satu tombol fitur diklik (hanya di mobile)
-    // Ini membantu saat pengguna memilih fitur, menu langsung tertutup.
+    // 2. Logika untuk menutup menu saat salah satu tombol fitur (nav-btn) diklik
     const navButtons = mainNav.querySelectorAll('.nav-btn');
     navButtons.forEach(button => {
         button.addEventListener('click', () => {
             // Periksa jika class 'open' ada (artinya sedang di mode mobile/menu terbuka)
             if (mainNav.classList.contains('open')) {
+                // Menutup menu dengan menghapus class 'open'
                 mainNav.classList.remove('open');
             }
         });
