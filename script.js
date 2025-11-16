@@ -88,8 +88,8 @@ const oceanographicData = {
 // Data simulasi untuk balasan
 const threadReplies = {
     '1': [
-        { author: 'Dr. Risa Dewi', content: 'Coba metode Van Veen Grab dan kombinasikan dengan Core Sampler untuk profil vertikal. Substrat berpasir butuh alat yang stabil.', time: '1 jam lalu' },
-        { author: 'Ir. Hendra Wijaya', content: 'Setuju dengan Dr. Risa, jangan lupakan *multivariate analysis* untuk membandingkan hasil antar metode.', time: '2 jam lalu' }
+        { author: 'Dr. Risa Dewi', content: 'Coba metode Van Veen Grab dan kombinasikan dengan Core Sampler untuk profil vertikal. Substrat berpasir butuh alat yang stabil.', time: '25 detik lalu' },
+        { author: 'Ir. Hendra Wijaya', content: 'Setuju dengan Dr. Risa, jangan lupakan *multivariate analysis* untuk membandingkan hasil antar metode.', time: '3 detik lalu' }
     ],
     '2': [
         { author: 'Sisca, M.Sc.', content: 'Ada korelasi negatif yang jelas antara SST dan hasil tangkapan Cakalang. Nelayan harus berlayar lebih jauh.', time: '1 hari lalu' }
