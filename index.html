@@ -11,25 +11,32 @@
     <header>
         <div class="header-content">
             <div class="logo-section">
+                <img src="LOGO_SIMAKLAUT.png" alt="Logo SIMAKLAUT" class="header-logo">
+                <div class="site-info">
+                    <h1>SIMAKLAUT</h1>
+                    <span class="tagline">Sistem Informasi Maritim dan Klimatologi laut - Provinsi Banten</span>
                 </div>
-        
-            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu Navigasi">
-                &#9776; </button>
-        
-            <nav id="mainNav">
-                <button class="nav-btn" data-section="dashboard">Dashboard</button>
-                <button class="nav-btn" data-section="peta">Peta Interaktif</button>
-                <button class="nav-btn" data-section="iklim">Perubahan Iklim</button>
-                <button class="nav-btn" data-section="forum">Forum Diskusi</button>
-            
-                <button class="nav-btn" id="loginBtn" onclick="openLoginModal()">Login</button>
-                <button class="nav-btn user-menu-btn" id="userBtn" style="display: none;">
-                    <span id="userName"></span> 
-                    | <span onclick="openEditProfileModal()" style="cursor: pointer;">Edit Profil</span> 
-                    | <span onclick="logout()" style="cursor: pointer;">Logout</span>
+            </div>
+
+            <div class="nav-and-buttons">
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu Navigasi">
+                    &#9776;
                 </button>
-            </nav>
         
+                <nav id="mainNav">
+                    <button class="nav-btn" data-section="dashboard">Dashboard</button>
+                    <button class="nav-btn" data-section="peta">Peta Interaktif</button>
+                    <button class="nav-btn" data-section="iklim">Perubahan Iklim</button>
+                    <button class="nav-btn" data-section="forum">Forum Diskusi</button>
+            
+                    <button class="nav-btn" id="loginBtn" onclick="openLoginModal()">Login</button>
+                    <button class="nav-btn user-menu-btn" id="userBtn" style="display: none;">
+                        <span id="userName"></span> 
+                        | <span onclick="openEditProfileModal()" style="cursor: pointer;">Edit Profil</span> 
+                        | <span onclick="logout()" style="cursor: pointer;">Logout</span>
+                    </button>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -199,20 +206,20 @@
                 <div class="thread-header">
                     <div>
                         <div class="thread-title">Metode Sampling Kualitas Air Laut di Perairan Dangkal</div>
-                        <div class="thread-meta">oleh Dr. Ahmad Santoso • 2 hari yang lalu</div>
+                        <div class="thread-meta">oleh Aulia Putri • 1 menit yang lalu</div>
                     </div>
-                    <span class="status-badge status-normal">Aktif</span>
+                    <span class="status-badge status-normal">Baru</span>
                 </div>
                 <div class="thread-content">
                     Saya sedang melakukan penelitian mengenai parameter kualitas air di zona litoral Pantai Anyer. Ingin berdiskusi mengenai metode sampling yang paling efektif untuk perairan dangkal dengan substrat berpasir. Apakah ada yang memiliki pengalaman dengan...
                 </div>
                 <div class="thread-footer">
                     <span>👁️ 124 dilihat</span>
-                    <span id="replies-count-1">💬 15 balasan</span>
+                    <span id="replies-count-1">💬 2 balasan</span>
                     <span>🏷️ Oseanografi, Metodologi</span>
                 </div>
                 <div class="replies-section" id="replies-1">
-                    <button class="toggle-replies-btn" onclick="toggleReplies('1')">Lihat Balasan (15)</button>
+                    <button class="toggle-replies-btn" onclick="toggleReplies('1')">Lihat Balasan (2)</button>
                     <div class="reply-list" style="display: none;">
                         </div>
                     <div class="new-reply-form" style="display: none;">
@@ -225,17 +232,21 @@
 
             <div class="discussion-thread" data-thread-id="2">
                 <div class="thread-header">
+                    <div>
+                        <div class="thread-title">Korelasi Peningkatan Muka Air dengan Aktivitas Nelayan</div>
+                        <div class="thread-meta">oleh Anisa Putri Wibowo • 1 hari yang lalu</div>
                     </div>
+                </div>
                 <div class="thread-content">
                     Berdasarkan data BMKG 5 tahun terakhir, terjadi peningkatan SST (Sea Surface Temperature) yang signifikan. Bagaimana korelasi ini dengan hasil tangkapan nelayan lokal? Saya mengundang kolaborasi untuk penelitian longitudinal...
                 </div>
                 <div class="thread-footer">
                     <span>👁️ 287 dilihat</span>
-                    <span id="replies-count-2">💬 32 balasan</span>
+                    <span id="replies-count-2">💬 1 balasan</span>
                     <span>🏷️ Klimatologi, Perikanan</span>
                 </div>
                  <div class="replies-section" id="replies-2">
-                    <button class="toggle-replies-btn" onclick="toggleReplies('2')">Lihat Balasan (32)</button>
+                    <button class="toggle-replies-btn" onclick="toggleReplies('2')">Lihat Balasan (1)</button>
                     <div class="reply-list" style="display: none;"></div>
                     <div class="new-reply-form" style="display: none;">
                         <input type="text" id="reply-author-2" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
@@ -247,17 +258,21 @@
 
             <div class="discussion-thread" data-thread-id="3">
                 <div class="thread-header">
+                </div>
+                    <div>
+                        <div class="thread-title">Perbandingan Tingkat ke Akuratan Metode Pasang Surut</div>
+                        <div class="thread-meta">oleh Han Jisung • 5 hari yang lalu</div>
                     </div>
                 <div class="thread-content">
                     Diskusi teknis mengenai akurasi prediksi pasang surut menggunakan model harmonik dibandingkan dengan pengukuran tide gauge di Tanjung Lesung. Ada deviasi sekitar 8-12 cm yang menarik untuk dianalisis lebih lanjut...
                 </div>
                 <div class="thread-footer">
                     <span>👁️ 156 dilihat</span>
-                    <span id="replies-count-3">💬 21 balasan</span>
+                    <span id="replies-count-3">💬 0 balasan</span>
                     <span>🏷️ Hidrodinamika, Model</span>
                 </div>
                  <div class="replies-section" id="replies-3">
-                    <button class="toggle-replies-btn" onclick="toggleReplies('3')">Lihat Balasan (21)</button>
+                    <button class="toggle-replies-btn" onclick="toggleReplies('3')">Lihat Balasan (0)</button>
                     <div class="reply-list" style="display: none;"></div>
                     <div class="new-reply-form" style="display: none;">
                         <input type="text" id="reply-author-3" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
@@ -269,17 +284,21 @@
 
              <div class="discussion-thread" data-thread-id="4">
                 <div class="thread-header">
+                </div> 
+                    <div>
+                        <div class="thread-title">Infokan Sumber Data Batimetri untuk Pemodelan Tsunami di Sawarna</div>
+                        <div class="thread-meta">oleh Lee Donghyeon • 1 minggu yang lalu</div>
                     </div>
                 <div class="thread-content">
                     Mencari dataset batimetri dengan resolusi minimal 10m untuk keperluan pemodelan tsunami di Sawarna. Apakah ada yang memiliki akses atau rekomendasi sumber data dari BIG atau institusi lain?
                 </div>
                 <div class="thread-footer">
                     <span>👁️ 93 dilihat</span>
-                    <span id="replies-count-4">💬 8 balasan</span>
+                    <span id="replies-count-4">💬 1 balasan</span>
                     <span>🏷️ Data, Batimetri, GIS</span>
                 </div>
                  <div class="replies-section" id="replies-4">
-                    <button class="toggle-replies-btn" onclick="toggleReplies('4')">Lihat Balasan (8)</button>
+                    <button class="toggle-replies-btn" onclick="toggleReplies('4')">Lihat Balasan (1)</button>
                     <div class="reply-list" style="display: none;"></div>
                     <div class="new-reply-form" style="display: none;">
                         <input type="text" id="reply-author-4" placeholder="Nama Anda" style="width: 150px; margin-right: 10px; padding: 5px; border-radius: 5px;">
