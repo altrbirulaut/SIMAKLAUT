@@ -140,7 +140,7 @@ function updateLocationInfo(locationKey) {
         }
     }
 }
-        { author: 'Sisca, M.Sc.', content: 'Ada korelasi negatif yang jelas antara SST dan hasil tangkapan Cakalang. Nelayan harus berlayar lebih jauh.', time: '1 hari lalu' }
+        ,{author: 'Sisca, M.Sc.', content: 'Ada korelasi negatif yang jelas antara SST dan hasil tangkapan Cakalang. Nelayan harus berlayar lebih jauh.', time: '1 hari lalu' }
     ],
     '3': [], // Contoh diskusi tanpa balasan
     '4': [
