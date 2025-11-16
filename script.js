@@ -85,6 +85,34 @@ const oceanographicData = {
     }
 };
 
+// Deskripsi detail untuk setiap pantai
+const beachDescriptions = {
+    anyer: {
+        name: 'Pantai Anyer',
+        description: 'Terletak di Kecamatan Anyer, Kabupaten Serang, Banten, sekitar 38 km dari Kota Serang dan 160 km dari Jakarta. Pantai Anyer terkenal dengan pasir putihnya yang bersih dan pemandangan menakjubkan ke arah barat yang memungkinkan pengunjung melihat siluet Gunung Rakata (Anak Krakatau) di kejauhan. Pantai ini memiliki fasilitas lengkap dengan berbagai resort dan restoran tepi pantai, menjadikannya destinasi favorit untuk liburan keluarga dan aktivitas olahraga air seperti jet ski dan banana boat.'
+    },
+    carita: {
+        name: 'Pantai Carita',
+        description: 'Terletak di Kecamatan Carita, Kabupaten Pandeglang, sekitar 160 km dari Jakarta. Pantai Carita menawarkan pemandangan spektakuler Selat Sunda dengan latar belakang Gunung Krakatau. Dikenal sebagai salah satu pantai terindah di Banten, pantai ini memiliki garis pantai yang panjang dengan pasir putih halus dan ombak yang relatif tenang, cocok untuk berenang dan snorkeling. Area ini juga merupakan titik pemberangkatan menuju Pulau Umang dan Taman Nasional Ujung Kulon.'
+    },
+    sawarna: {
+        name: 'Pantai Sawarna',
+        description: 'Terletak di Kecamatan Bayah, Kabupaten Lebak, sekitar 150 km dari Rangkasbitung. Pantai Sawarna adalah hidden gem Banten yang terkenal dengan keindahan alamnya yang masih alami. Kawasan ini memiliki beberapa pantai cantik seperti Pantai Tanjung Layar dengan formasi batu karang raksasa berbentuk layar perahu, Pantai Ciantir, dan Pantai Karang Taraje. Ombaknya yang besar menjadikan Sawarna sebagai surga bagi para peselancar. Selain itu, terdapat gua-gua alami seperti Gua Lalay dan Gua Pengantin yang menarik untuk dijelajahi.'
+    },
+    tanjunglesung: {
+        name: 'Tanjung Lesung',
+        description: 'Terletak di Kecamatan Panimbang, Kabupaten Pandeglang, sekitar 170 km dari Jakarta. Tanjung Lesung dikembangkan sebagai Kawasan Ekonomi Khusus (KEK) pariwisata dengan fasilitas resort mewah bertaraf internasional. Pantai ini menawarkan pasir putih yang lembut, air laut yang jernih, dan terumbu karang yang indah. Lokasi ini ideal untuk diving, snorkeling, dan berbagai aktivitas wisata bahari lainnya. Dari pantai ini, pengunjung dapat menikmati sunset yang memukau dengan pemandangan Pulau Sangiang dan Gunung Krakatau di kejauhan.'
+    },
+    labuan: {
+        name: 'Pantai Labuan',
+        description: 'Terletak di Kecamatan Labuan, Kabupaten Pandeglang, sekitar 140 km dari Jakarta. Pantai Labuan merupakan salah satu pelabuhan penting di pesisir barat Banten yang juga berfungsi sebagai area wisata bahari. Pantai ini memiliki pemandangan indah menghadap Selat Sunda dengan ombak yang cukup besar. Area ini menjadi pintu gerbang menuju Taman Nasional Ujung Kulon dan Pulau Peucang. Selain itu, Labuan juga terkenal dengan kuliner seafood segar dan menjadi spot favorit untuk memancing.'
+    },
+    bagedur: {
+        name: 'Pantai Bagedur',
+        description: 'Terletak di Kecamatan Malingping, Kabupaten Lebak, sekitar 165 km dari Rangkasbitung. Pantai Bagedur adalah destinasi wisata yang masih relatif sepi dan alami, cocok bagi pencari ketenangan. Pantai ini memiliki karakteristik pasir hitam vulkanik dengan ombak yang cukup besar, dikelilingi perbukitan hijau yang menambah keindahan panoramanya. Suasana yang tenang dan belum terlalu ramai menjadikan Bagedur tempat yang sempurna untuk relaksasi, camping, dan menikmati keindahan alam pesisir selatan Banten yang eksotis.'
+    }
+};
+
 // Data simulasi untuk balasan
 const threadReplies = {
     '1': [
@@ -92,6 +120,26 @@ const threadReplies = {
         { author: 'Ir. Hendra Wijaya', content: 'Setuju dengan Dr. Risa, jangan lupakan *multivariate analysis* untuk membandingkan hasil antar metode.', time: '3 detik lalu' }
     ],
     '2': [
+
+/**
+ * Update informasi lokasi di bagian Peta Interaktif
+ */
+function updateLocationInfo(locationKey) {
+    const locationData = beachDescriptions[locationKey];
+    
+    if (locationData) {
+        const titleElement = document.getElementById('locationTitle');
+        const descElement = document.getElementById('locationDescription');
+        
+        if (titleElement) {
+            titleElement.innerHTML = `📍 Informasi Lokasi - ${locationData.name}`;
+        }
+        
+        if (descElement) {
+            descElement.textContent = locationData.description;
+        }
+    }
+}
         { author: 'Sisca, M.Sc.', content: 'Ada korelasi negatif yang jelas antara SST dan hasil tangkapan Cakalang. Nelayan harus berlayar lebih jauh.', time: '1 hari lalu' }
     ],
     '3': [], // Contoh diskusi tanpa balasan
@@ -440,6 +488,11 @@ function initMap() {
                     tempElement.innerHTML = `<strong>Suhu:</strong> N/A`;
                 }
             }
+        });
+        
+        // Update informasi lokasi saat marker diklik
+        marker.on('click', () => {
+            updateLocationInfo(beach.loc);
         });
     });
 
