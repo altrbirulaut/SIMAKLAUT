@@ -11,9 +11,10 @@ body {
     min-height: 100vh;
 }
 
+/* ========== HEADER STYLES ========== */
 header {
-    background: url('SIMAKLAUT.jpg') no-repeat center center/cover;
-    padding: 1.5rem 2rem;
+    background: url('BACKGROUND.jpg') no-repeat center center/cover;
+    padding: 1rem 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-bottom: 3px solid #2196f3;
     position: relative; 
@@ -28,40 +29,85 @@ header {
     align-items: center;
 }
 
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-logo {
+    height: 60px;
+    width: auto;
+}
+
+.site-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .logo-section h1 {
     font-size: 2rem;
     color: #fff;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    margin: 0;
+    line-height: 1.2;
 }
 
-.logo-section p {
-    font-size: 0.9rem;
+.tagline {
+    font-size: 0.85rem;
     color: #b3d9ff;
-    margin-top: 0.3rem;
+    margin-top: 3px;
+    display: block;
+    line-height: 1.2;
+}
+
+.nav-and-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 nav {
     display: flex;
-    gap: 2rem;
+    gap: 0.75rem;
+    align-items: center;
 }
 
 nav button {
     background: transparent;
-    border: 2px solid #64b5f6;
+    border: 2px solid transparent;
     color: #fff;
     padding: 0.7rem 1.5rem;
     border-radius: 25px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
 }
 
-nav button:hover, nav button.active {
+nav button:hover {
+    background: rgba(33, 150, 243, 0.3);
+    border-color: #64b5f6;
+}
+
+nav button.active {
     background: #2196f3;
     border-color: #2196f3;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 0.5rem;
 }
 
 .container {
@@ -630,5 +676,105 @@ header nav .nav-btn {
     .header-content {
         /* Pastikan logo dan hamburger button sejajar */
         justify-content: space-between; 
+    }
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-and-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#mainNav {
+    display: flex;
+    gap: 10px; /* Jarak antar tombol fitur */
+    align-items: center;
+}
+
+/* Mengatur ukuran logo */
+.header-logo {
+    height: 50px; 
+    margin-right: 15px;
+    /* Pastikan gambar logo berlatar belakang transparan atau hitam */
+    /* Jika logo putih/biru, ini akan terlihat bagus di latar belakang biru gelap */
+}
+
+.site-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Gaya untuk H1 SIMAKLAUT */
+.logo-section h1 {
+    font-size: 2.2rem; /* Sedikit lebih besar */
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0; /* Hapus margin default */
+    line-height: 1; /* Kontrol jarak baris */
+}
+
+/* Gaya untuk Tagline */
+.tagline {
+    font-size: 0.9rem;
+    color: #b3d9ff;
+    margin-top: 5px; /* Sedikit jarak di bawah H1 */
+    display: block; /* Agar mengambil baris penuh */
+}
+
+/* Gaya untuk Tag (DEMO) */
+.demo-tag {
+    font-size: 1.5rem; /* Ukuran lebih kecil dari SIMAKLAUT */
+    font-weight: 400;
+    color: #b3d9ff; /* Warna yang lebih redup */
+}
+
+/* Perbaikan untuk tombol navigasi agar terlihat lebih seperti gambar */
+nav button {
+    /* Gaya yang sudah ada */
+    background: transparent;
+    
+    /* MENGHILANGKAN OUTLINE/BORDER */
+    border: none;
+    
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px; /* Menggunakan sudut yang lebih kotak tanpa border */
+    cursor: pointer;
+    font-weight: 600;
+    
+    /* Tambahan: Memberi sedikit latar belakang agar tombol tetap menonjol */
+    background: rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease;
+}
+
+/* Gaya saat tombol di-hover atau aktif */
+nav button:hover, 
+nav button.active {
+    background: #2196f3; /* Warna biru saat hover/aktif */
+    color: #fff;
+    border: none; /* Memastikan border tetap hilang saat hover */
+}
+
+/* Perbaikan untuk Mobile Responsiveness */
+@media (max-width: 768px) {
+    .header-logo {
+        height: 40px;
+    }
+    .logo-section h1 {
+        font-size: 1.8rem;
+    }
+    .demo-tag {
+        font-size: 1.2rem;
+    }
+    .tagline {
+        font-size: 0.8rem;
     }
 }
